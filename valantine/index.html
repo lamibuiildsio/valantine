@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Letter For You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rose: #e63946;
+            --blush: #ffb7c5;
+            --gold: #d4af37;
+            --deep-burgundy: #4a0404;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fff5f6 0%, #ffdee9 100%);
+            font-family: 'Playfair Display', serif;
+            overflow: hidden;
+        }
+
+        /* Animated Floating Petals */
+        .petal {
+            position: absolute;
+            background-color: #ffb7c5;
+            border-radius: 150% 0 150% 0;
+            animation: animate 10s linear infinite;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        @keyframes animate {
+            0% { transform: translateY(-10%) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            z-index: 10;
+            max-width: 450px;
+            width: 85%;
+            transition: all 0.5s ease;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: var(--deep-burgundy);
+            font-size: 2.8rem;
+            margin: 0 0 1.5rem 0;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            height: 80px;
+            position: relative;
+        }
+
+        button {
+            font-family: 'Playfair Display', serif;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(230, 57, 70, 0.2);
+        }
+
+        #yesBtn {
+            background: linear-gradient(45deg, var(--rose), #ff4d6d);
+            color: white;
+            font-weight: 600;
+        }
+
+        #noBtn {
+            background: white;
+            color: var(--rose);
+            border: 1px solid var(--rose);
+            z-index: 20;
+        }
+
+        .success-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .success-content h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: var(--rose);
+            margin: 0;
+        }
+
+        .heart-loader {
+            color: var(--rose);
+            font-size: 60px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="romanticMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="petal-container"></div>
+
+    <div class="glass-card" id="card">
+        <div id="question-area">
+            <h1>Dearest...</h1>
+            <p>Every moment feels like a poem with you.</p>
+            <h1>Will you be my Valentine?</h1>
+            
+            <div class="btn-container">
+                <button id="yesBtn" onclick="handleYes()">Of course</button>
+                <button id="noBtn">No</button>
+            </div>
+        </div>
+
+        <div id="success-area" class="success-content">
+            <div class="heart-loader">❤</div>
+            <h2>I already knew that!</h2>
+            <p style="margin-top: 10px;">My heart has always been yours.</p>
+        </div>
+    </div>
+
+    <script>
+        // 1. Petal Animation
+        const petalContainer = document.getElementById('petal-container');
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.left = Math.random() * 100 + 'vw';
+            const size = (Math.random() * 15 + 10) + 'px';
+            petal.style.width = size;
+            petal.style.height = size;
+            petal.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            petalContainer.appendChild(petal);
+            setTimeout(() => { petal.remove(); }, 10000);
+        }
+        setInterval(createPetal, 300);
+
+        // 2. Evasive "No" Button
+        const noBtn = document.getElementById('noBtn');
+        const moveNo = () => {
+            const maxX = window.innerWidth - 150;
+            const maxY = window.innerHeight - 100;
+            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        };
+
+        noBtn.addEventListener('mouseover', moveNo);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveNo();
+        });
+
+        // 3. Success Transition + Music Play
+        function handleYes() {
+            // Play the music
+            const music = document.getElementById('romanticMusic');
+            music.play().catch(error => console.log("Audio playback failed:", error));
+
+            const questionArea = document.getElementById('question-area');
+            const successArea = document.getElementById('success-area');
+            const card = document.getElementById('card');
+
+            questionArea.style.display = 'none';
+            successArea.style.display = 'block';
+            
+            setTimeout(() => {
+                successArea.style.opacity = '1';
+                card.style.transform = 'scale(1.1)';
+                card.style.background = 'rgba(255, 255, 255, 0.8)';
+            }, 50);
+        }
+    </script>
+</body>
+</html>
